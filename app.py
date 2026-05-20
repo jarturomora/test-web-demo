@@ -54,7 +54,7 @@ def login_post() -> str:
 
         return render_template(
             "index.html",
-            message="Credenciales invalidas. Revisa la contrasena.",
+            message="Credenciales invalidas. Revisa la contraseña.",
         )
     except ValueError as error:
         # Mostramos errores funcionales (validaciones, etc.).
