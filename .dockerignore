@@ -1,0 +1,13 @@
+# Metadatos de git y caches locales que no deben entrar al build context.
+.git
+.gitignore
+.pytest_cache
+__pycache__
+*.pyc
+
+# Entornos locales y artefactos que no aporta copiar a la imagen.
+.venv
+venv
+
+# Base de datos local y otros archivos temporales.
+users.db

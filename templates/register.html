@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro</title>
+  <style>
+    :root {
+      --bg: #f2eee8;
+      --surface: #fffdf9;
+      --text: #1e1b18;
+      --accent: #bb3e03;
+      --accent-strong: #9b2226;
+      --border: #d8cfc4;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 20%, #ffd6a5 0%, transparent 30%),
+        radial-gradient(circle at 80% 0%, #e9edc9 0%, transparent 35%),
+        linear-gradient(135deg, #fefae0 0%, var(--bg) 100%);
+      padding: 24px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(30, 27, 24, 0.08);
+      animation: rise 0.55s ease-out;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.9rem;
+      line-height: 1.1;
+    }
+
+    p {
+      margin: 0 0 18px;
+      color: #4f4a45;
+    }
+
+    form {
+      display: grid;
+      gap: 12px;
+    }
+
+    label {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 1rem;
+      margin-top: 6px;
+      outline: none;
+      background: #fff;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(187, 62, 3, 0.2);
+    }
+
+    button {
+      margin-top: 4px;
+      border: none;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      cursor: pointer;
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.03);
+    }
+
+    .message {
+      margin-top: 14px;
+      padding: 10px 12px;
+      border: 1px solid #e5989b;
+      background: #ffe5e8;
+      border-radius: 10px;
+      color: #6d0f1a;
+      font-weight: 600;
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <!-- Pantalla dedicada al registro de nuevos usuarios. -->
+    <h1>Crear cuenta</h1>
+    <p>Completa los datos para registrarte en la base de datos SQLite.</p>
+
+    <form method="post" action="/register">
+      <label>
+        Nombre de usuario
+        <input type="text" name="username" required>
+      </label>
+
+      <label>
+        Correo
+        <input type="email" name="email" required>
+      </label>
+
+      <label>
+        Contrasena
+        <input type="password" name="password" minlength="8" required>
+      </label>
+
+      <button type="submit">Registrar</button>
+    </form>
+
+    <p style="margin-top: 14px; margin-bottom: 0;">
+      Ya tienes cuenta?
+      <a href="/login" style="color: #9b2226; font-weight: 700;">Inicia sesion</a>
+    </p>
+
+    {% if message %}
+    <!-- Mensaje de error o validacion devuelto por el backend. -->
+    <div class="message">{{ message }}</div>
+    {% endif %}
+  </main>
+</body>
+</html>
