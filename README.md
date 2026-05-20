@@ -83,66 +83,61 @@ pytest -q
 
 También puedes ejecutar pruebas en contenedor con el servicio opcional `test`.
 
-## Despliegue automático a Render desde CI
+## Despliegue en PythonAnywhere (gratis)
 
-El workflow de GitHub Actions tiene dos jobs:
+Este proyecto está preparado para desplegarse en PythonAnywhere usando su hosting WSGI.
+El workflow de GitHub Actions se usa para validar tests antes de publicar cambios.
 
-- test: ejecuta pytest
-- deploy_render: solo corre si test pasa y el evento es push a main
+### Requisitos en PythonAnywhere
 
-Configura estos secrets en GitHub (Settings > Secrets and variables > Actions):
+- Cuenta en PythonAnywhere.
+- Un entorno virtual con Python 3.10+.
+- El proyecto clonado en tu home de PythonAnywhere.
 
-- RENDER_DEPLOY_HOOK_URL
+### Pasos de configuración
 
-Nota importante:
+1. En PythonAnywhere, abre una consola Bash y clona el repositorio:
 
-- En Render, SQLite se guarda en un disco persistente montado en `/var/data`.
-- La app usa `APP_DB_PATH=/var/data/users.db` para mantener datos entre reinicios.
-- Para usar disco persistente en Render, el servicio debe estar en un plan compatible (por ejemplo, `starter`).
+```bash
+git clone <TU_REPO_GIT>
+cd test-web-demo
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
 
-## Estructura para Render
+1. Crea una nueva Web App en el panel de PythonAnywhere:
 
-- `render.yaml`: blueprint del servicio web con disco persistente.
+- Tipo: `Manual configuration`
+- Versión de Python: 3.10+ (la que tengas disponible)
 
-Para conectar el repositorio con Render puedes usar `render.yaml` (Blueprint) o configurar el servicio manualmente en el panel.
+1. En la pestaña `Web`, configura el archivo WSGI:
 
-## Cómo configurar Render paso a paso
+- Puedes usar la plantilla de `pythonanywhere_wsgi.py` incluida en este repo.
+- Ajusta `PROJECT_HOME` a tu ruta real, por ejemplo:
+  - `/home/tu_usuario/test-web-demo`
 
-### Opción A: usando Blueprint (`render.yaml`)
+1. Configura el entorno virtual en la pestaña `Web`:
 
-1. En Render, pulsa `New +` y luego `Blueprint`.
-2. Conecta tu repositorio de GitHub y selecciona este proyecto.
-3. Render detectará `render.yaml` y mostrará el servicio a crear.
-4. Confirma el plan, nombre del servicio y despliega.
-5. Cuando termine, abre la URL publica y prueba `/login` y `/register`.
+- Ruta ejemplo: `/home/tu_usuario/test-web-demo/.venv`
 
-### Opción B: configuración manual en el panel
+1. Recarga la app desde el botón `Reload` y prueba:
 
-1. En Render, crea un `Web Service` desde tu repositorio.
-2. Define `Environment` como `Python`.
-3. Configura:
+- `https://tu_usuario.pythonanywhere.com/login`
+- `https://tu_usuario.pythonanywhere.com/register`
 
-   - Build Command: `pip install -r requirements.txt`
-   - Start Command: `gunicorn app:app --bind 0.0.0.0:$PORT`
+### SQLite en PythonAnywhere
 
-4. En `Environment Variables`, agrega:
+- SQLite se guarda de forma persistente en tu home.
+- La variable `APP_DB_PATH` puede apuntar a:
+  - `/home/tu_usuario/test-web-demo/users.db`
+- Si no defines `APP_DB_PATH`, por defecto se usa `users.db` en la raíz del proyecto.
 
-   - `APP_DB_PATH=/var/data/users.db`
+### Flujo recomendado con GitHub Actions
 
-5. En `Disks`, crea un disco persistente:
-
-   - Mount Path: `/var/data`
-   - Size: `1 GB` (o superior si lo necesitas)
-
-6. Guarda cambios y lanza el deploy.
-
-### Activar deploy automático desde GitHub Actions
-
-1. En el servicio de Render, entra a `Settings`.
-2. Copia la `Deploy Hook URL`.
-3. En GitHub, abre `Settings > Secrets and variables > Actions`.
-4. Crea el secret `RENDER_DEPLOY_HOOK_URL` con esa URL.
-5. Haz push a `main`: CI correrá tests y, si pasan, disparará deploy en Render.
+1. Haz push a GitHub.
+2. GitHub Actions ejecuta tests automáticamente.
+3. Si todo pasa, en PythonAnywhere haces `git pull` y `Reload`.
 
 ## Estructura
 
@@ -153,7 +148,7 @@ Para conectar el repositorio con Render puedes usar `render.yaml` (Blueprint) o 
 - `.github/workflows/python-ci.yml`: pipeline para GitHub Actions.
 - `Dockerfile`: imagen para ejecutar la app en contenedor local.
 - `docker-compose.yml`: orquestación local del contenedor web y servicio opcional de tests.
-- `render.yaml`: configuración de despliegue en Render con disco persistente.
+- `pythonanywhere_wsgi.py`: plantilla WSGI para desplegar en PythonAnywhere.
 
 ## Convención de textos (español)
 

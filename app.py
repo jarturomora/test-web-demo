@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent
 
 def _resolve_db_path() -> Path:
     # Permite definir la ruta de la base de datos vía variable de entorno
-    # (por ejemplo, /var/data/users.db en Render con disco persistente).
+    # (por ejemplo, /home/usuario/miapp/users.db en PythonAnywhere).
     env_db_path = os.environ.get("APP_DB_PATH")
     if env_db_path:
         return Path(env_db_path)
