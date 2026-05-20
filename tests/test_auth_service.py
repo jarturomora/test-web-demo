@@ -30,7 +30,7 @@ class TestAuthServiceInitialization(unittest.TestCase):
 
 class TestAuthServiceMethods(unittest.TestCase):
     def setUp(self) -> None:
-        # Inicializamos DB limpia para cada prueba de metodos.
+        # Inicializamos DB limpia para cada prueba de métodos.
         self.temp_dir = tempfile.TemporaryDirectory()
         self.db_path = Path(self.temp_dir.name) / "test_users.db"
         self.service = AuthService(str(self.db_path))
@@ -40,7 +40,7 @@ class TestAuthServiceMethods(unittest.TestCase):
         self.temp_dir.cleanup()
 
     def test_create_user_stores_user(self) -> None:
-        # Verifica insercion y lectura posterior.
+        # Verifica inserción y lectura posterior.
         user_id = self.service.create_user("ana", "ana@example.com", "micontra123")
 
         self.assertGreater(user_id, 0)
@@ -58,7 +58,7 @@ class TestAuthServiceMethods(unittest.TestCase):
             self.service.create_user("ana2", "ana@example.com", "micontra123")
 
     def test_authenticate_user_returns_true_for_valid_credentials(self) -> None:
-        # Happy path de autenticacion.
+        # Happy path de autenticación.
         self.service.create_user("ana", "ana@example.com", "micontra123")
 
         is_valid = self.service.authenticate_user("ana", "ana@example.com", "micontra123")
@@ -74,7 +74,7 @@ class TestAuthServiceMethods(unittest.TestCase):
         self.assertFalse(is_valid)
 
     def test_create_user_validates_required_fields(self) -> None:
-        # Casos de validacion de entradas obligatorias.
+        # Casos de validación de entradas obligatorias.
         with self.assertRaises(ValueError):
             self.service.create_user("", "ana@example.com", "micontra123")
 

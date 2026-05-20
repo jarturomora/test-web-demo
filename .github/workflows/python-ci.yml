@@ -9,15 +9,15 @@ on:
 
 jobs:
   test:
-    # Entorno Linux estandar para validar el proyecto.
+    # Entorno Linux estándar para validar el proyecto.
     runs-on: ubuntu-latest
 
     steps:
-      # 1) Descarga el codigo del repositorio.
+      # 1) Descarga el código del repositorio.
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2) Configura la version de Python usada en el pipeline.
+      # 2) Configura la versión de Python usada en el pipeline.
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -31,4 +31,24 @@ jobs:
 
       # 4) Ejecuta la suite de pruebas.
       - name: Run tests
-        run: pytest -q
+        run: python -m pytest -q
+        env:
+          # Garantiza que la raíz del repo esté en el path de imports en CI.
+          PYTHONPATH: ${{ github.workspace }}
+
+  deploy_render:
+    # Solo despliega en push a main y si el job de test finaliza correctamente.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1) Descarga el código del repositorio.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2) Lanza deploy en Render mediante Deploy Hook seguro.
+      - name: Trigger Render Deploy Hook
+        run: curl -fsS -X POST "$RENDER_DEPLOY_HOOK_URL"
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}

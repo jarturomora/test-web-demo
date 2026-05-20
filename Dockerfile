@@ -8,19 +8,19 @@ ENV PYTHONUNBUFFERED=1
 # Directorio de trabajo dentro del contenedor.
 WORKDIR /app
 
-# Copiamos primero requirements para aprovechar cache de capas en builds futuros.
+# Copiamos primero requirements para aprovechar caché de capas en builds futuros.
 COPY requirements.txt /app/requirements.txt
 
 # Instalamos dependencias del proyecto.
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# Copiamos el resto del codigo fuente.
+# Copiamos el resto del código fuente.
 COPY . /app
 
-# Puerto donde Flask escuchara dentro del contenedor.
+# Puerto donde Flask escuchará dentro del contenedor.
 EXPOSE 5000
 
-# Variables para ejecutar la aplicacion Flask.
+# Variables para ejecutar la aplicación Flask.
 ENV FLASK_APP=app.py
 ENV FLASK_RUN_HOST=0.0.0.0
 ENV FLASK_RUN_PORT=5000

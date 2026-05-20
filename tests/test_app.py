@@ -24,7 +24,7 @@ class TestAppRoutes(unittest.TestCase):
         response = self.client.get("/login")
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Iniciar sesion", response.get_data(as_text=True))
+        self.assertIn("Iniciar sesión", response.get_data(as_text=True))
 
     def test_get_register_page(self) -> None:
         response = self.client.get("/register")
@@ -59,7 +59,7 @@ class TestAppRoutes(unittest.TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Inicio de sesion correcto", response.get_data(as_text=True))
+        self.assertIn("Inicio de sesión correcto", response.get_data(as_text=True))
 
     def test_post_login_fails_when_user_does_not_exist(self) -> None:
         response = self.client.post(

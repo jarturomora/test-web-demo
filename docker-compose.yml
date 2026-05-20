@@ -9,17 +9,17 @@ services:
     ports:
       - "5000:5000"
 
-    # Monta el codigo para reflejar cambios locales sin reconstruir imagen.
+    # Monta el código para reflejar cambios locales sin reconstruir imagen.
     volumes:
       - .:/app
 
-    # Define variables de entorno utiles en desarrollo.
+    # Define variables de entorno útiles en desarrollo.
     environment:
       FLASK_APP: app.py
       FLASK_RUN_HOST: 0.0.0.0
       FLASK_RUN_PORT: 5000
 
-    # Reinicia automaticamente salvo que se detenga manualmente.
+    # Reinicia automáticamente salvo que se detenga manualmente.
     restart: unless-stopped
 
   test:
@@ -32,7 +32,7 @@ services:
     profiles:
       - test
 
-    # Monta el codigo local para que los tests usen el estado actual del repo.
+    # Monta el código local para que los tests usen el estado actual del repo.
     volumes:
       - .:/app
 

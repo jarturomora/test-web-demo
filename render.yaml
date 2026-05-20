@@ -1,0 +1,23 @@
+# Blueprint de Render para desplegar la app Flask con SQLite persistente.
+services:
+  - type: web
+    name: test-web-demo
+    env: python
+    plan: free
+
+    # Comandos de build y arranque del servicio.
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+
+    # Variables de entorno para versión de Python y ruta SQLite.
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.3
+      - key: APP_DB_PATH
+        value: /var/data/users.db
+
+    # Disco persistente para conservar users.db entre despliegues/reinicios.
+    disks:
+      - name: sqlite-data
+        mountPath: /var/data
+        sizeGB: 1

@@ -10,7 +10,7 @@ from typing import Optional
 
 @dataclass
 class User:
-    # Modelo de datos simple para transportar informacion del usuario.
+    # Modelo de datos simple para transportar información del usuario.
     id: int
     username: str
     email: str
@@ -26,7 +26,7 @@ class AuthService:
 
     @contextmanager
     def get_connection(self):
-        # Context manager para abrir/cerrar conexion de forma segura.
+        # Context manager para abrir/cerrar conexión de forma segura.
         connection = sqlite3.connect(self.db_path)
         connection.row_factory = sqlite3.Row
         try:
@@ -52,13 +52,13 @@ class AuthService:
             connection.commit()
 
     def create_user(self, username: str, email: str, password: str) -> int:
-        # Validamos formato minimo antes de interactuar con la base de datos.
+        # Validamos formato mínimo antes de interactuar con la base de datos.
         self._validate_inputs(username, email, password)
 
         # Generamos salt aleatoria por usuario para robustecer el hash.
         password_salt = os.urandom(16)
         password_hash = self._hash_password(password, password_salt)
-        # Guardamos fecha en UTC para evitar ambiguedades horarias.
+        # Guardamos fecha en UTC para evitar ambigüedades horarias.
         created_at = datetime.now(timezone.utc).isoformat()
 
         try:
@@ -73,7 +73,7 @@ class AuthService:
                 connection.commit()
                 return int(cursor.lastrowid)
         except sqlite3.IntegrityError as error:
-            # UNIQUE en username/email termina aqui y se traduce a error de dominio.
+            # UNIQUE en username/email termina aquí y se traduce a error de dominio.
             raise ValueError("Username or email already exists") from error
 
     def authenticate_user(self, username: str, email: str, password: str) -> bool:
@@ -90,7 +90,7 @@ class AuthService:
         return self.get_user_by_username_and_email(username, email) is not None
 
     def get_user_by_username_and_email(self, username: str, email: str) -> Optional[User]:
-        # Normalizamos email a minusculas para mantener consistencia.
+        # Normalizamos email a minúsculas para mantener consistencia.
         with self.get_connection() as connection:
             row = connection.execute(
                 """
@@ -125,7 +125,7 @@ class AuthService:
 
     @staticmethod
     def _validate_inputs(username: str, email: str, password: str) -> None:
-        # Reglas minimas de validacion de negocio.
+        # Reglas mínimas de validación de negocio.
         if not username or not username.strip():
             raise ValueError("Username is required")
         if not email or "@" not in email:
