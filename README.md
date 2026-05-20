@@ -85,7 +85,7 @@ También puedes ejecutar pruebas en contenedor con el servicio opcional `test`.
 
 ## Despliegue automático a Render desde CI
 
-El workflow de GitHub Actions ahora tiene dos jobs:
+El workflow de GitHub Actions tiene dos jobs:
 
 - test: ejecuta pytest
 - deploy_render: solo corre si test pasa y el evento es push a main
@@ -98,6 +98,7 @@ Nota importante:
 
 - En Render, SQLite se guarda en un disco persistente montado en `/var/data`.
 - La app usa `APP_DB_PATH=/var/data/users.db` para mantener datos entre reinicios.
+- Para usar disco persistente en Render, el servicio debe estar en un plan compatible (por ejemplo, `starter`).
 
 ## Estructura para Render
 

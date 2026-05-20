@@ -3,7 +3,8 @@ services:
   - type: web
     name: test-web-demo
     env: python
-    plan: free
+    # El disco persistente requiere un plan compatible (por ejemplo starter).
+    plan: starter
 
     # Comandos de build y arranque del servicio.
     buildCommand: pip install -r requirements.txt
@@ -17,7 +18,7 @@ services:
         value: /var/data/users.db
 
     # Disco persistente para conservar users.db entre despliegues/reinicios.
-    disks:
-      - name: sqlite-data
-        mountPath: /var/data
-        sizeGB: 1
+    disk:
+      name: sqlite-data
+      mountPath: /var/data
+      sizeGB: 1
