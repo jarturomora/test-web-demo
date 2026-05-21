@@ -7,6 +7,11 @@ on:
   pull_request:
     branches: [main]
 
+# Fuerza a ejecutar acciones JavaScript con Node 24 para validar compatibilidad
+# antes del cambio de runtime por defecto en GitHub Actions.
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   test:
     # Entorno Linux estándar para validar el proyecto.
@@ -15,11 +20,11 @@ jobs:
     steps:
       # 1) Descarga el código del repositorio.
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # 2) Configura la versión de Python usada en el pipeline.
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -45,7 +50,7 @@ jobs:
     steps:
       # 1) Descarga el código del repositorio.
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # 2) Lanza deploy en Render mediante Deploy Hook.
       - name: Trigger Render Deploy Hook
