@@ -1,17 +1,17 @@
 services:
   web:
-    # Construye la imagen usando el Dockerfile del proyecto actual.
+    # Construye la imagen usando el Dockerfile dentro de docker/.
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: docker/Dockerfile
 
     # Publica el puerto del contenedor para acceso local en el navegador.
     ports:
       - "5000:5000"
 
-    # Monta el código para reflejar cambios locales sin reconstruir imagen.
+    # Monta el código local para reflejar cambios sin reconstruir imagen.
     volumes:
-      - .:/app
+      - ..:/app
 
     # Define variables de entorno útiles en desarrollo.
     environment:
@@ -25,8 +25,8 @@ services:
   test:
     # Reutiliza la misma imagen del proyecto para asegurar paridad de entorno.
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: docker/Dockerfile
 
     # Servicio opcional: solo se ejecuta cuando se habilita el perfil test.
     profiles:
@@ -34,7 +34,7 @@ services:
 
     # Monta el código local para que los tests usen el estado actual del repo.
     volumes:
-      - .:/app
+      - ..:/app
 
     # Comando de pruebas dentro del contenedor.
     command: ["python", "-m", "pytest", "-q"]

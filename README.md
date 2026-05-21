@@ -38,7 +38,7 @@ Abre `http://127.0.0.1:5000/login` para iniciar sesión o `http://127.0.0.1:5000
 ### Opción 1: Docker Compose (recomendado)
 
 ```bash
-docker compose up --build
+docker compose -f docker/docker-compose.yml up --build
 ```
 
 - Levanta el servicio web en `http://127.0.0.1:5000`.
@@ -47,7 +47,7 @@ docker compose up --build
 Para detener:
 
 ```bash
-docker compose down
+docker compose -f docker/docker-compose.yml down
 ```
 
 ### Servicio opcional de tests en Docker Compose
@@ -55,7 +55,7 @@ docker compose down
 Ejecutar la suite dentro de contenedor:
 
 ```bash
-docker compose --profile test run --rm test
+docker compose -f docker/docker-compose.yml --profile test run --rm test
 ```
 
 - Este comando construye/usa la imagen y corre `pytest -q` dentro de Docker.
@@ -66,7 +66,7 @@ docker compose --profile test run --rm test
 Construir imagen:
 
 ```bash
-docker build -t test-web-demo:local .
+docker build -f docker/Dockerfile -t test-web-demo:local .
 ```
 
 Ejecutar contenedor:
@@ -103,7 +103,7 @@ Este proyecto está preparado para desplegarse en Render desde GitHub Actions.
 1. Abre tu servicio en Render y entra en `Settings`.
 2. Copia la `Deploy Hook URL`.
 3. En GitHub, abre `Settings > Secrets and variables > Actions`.
-4. Crea el secret `RENDER_DEPLOY_HOOK_URL` con esa URL.
+4. Crea el repository secret `RENDER_DEPLOY_HOOK_URL` con esa URL.
 
 ### Paso 3: despliegue automático
 
@@ -124,8 +124,8 @@ Este proyecto está preparado para desplegarse en Render desde GitHub Actions.
 - `templates/`: vistas HTML.
 - `tests/`: pruebas unitarias e integración.
 - `.github/workflows/python-ci.yml`: pipeline para GitHub Actions.
-- `Dockerfile`: imagen para ejecutar la app en contenedor local.
-- `docker-compose.yml`: orquestación local del contenedor web y servicio opcional de tests.
+- `docker/Dockerfile`: imagen para ejecutar la app en contenedor local.
+- `docker/docker-compose.yml`: orquestación local del contenedor web y servicio opcional de tests.
 - `render.yaml`: configuración de despliegue en Render free.
 
 ## Convención de textos (español)
