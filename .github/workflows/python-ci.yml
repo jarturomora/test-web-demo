@@ -35,3 +35,20 @@ jobs:
         env:
           # Garantiza que la raíz del repo esté en el path de imports en CI.
           PYTHONPATH: ${{ github.workspace }}
+
+  deploy_render:
+    # Despliega solo en push a main y si las pruebas pasan.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1) Descarga el código del repositorio.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2) Lanza deploy en Render mediante Deploy Hook.
+      - name: Trigger Render Deploy Hook
+        run: curl -fsS -X POST "$RENDER_DEPLOY_HOOK_URL"
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}

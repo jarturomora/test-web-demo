@@ -1,0 +1,15 @@
+# Blueprint de Render para desplegar esta demo Flask.
+services:
+  - type: web
+    name: test-web-demo
+    env: python
+    plan: free
+
+    # Comandos básicos para instalar dependencias y arrancar la app.
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+
+    envVars:
+      # En free tier usamos almacenamiento efímero en /tmp.
+      - key: APP_DB_PATH
+        value: /tmp/users.db

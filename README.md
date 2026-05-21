@@ -83,61 +83,39 @@ pytest -q
 
 También puedes ejecutar pruebas en contenedor con el servicio opcional `test`.
 
-## Despliegue en PythonAnywhere (gratis)
+## Despliegue en Render (free tier)
 
-Este proyecto está preparado para desplegarse en PythonAnywhere usando su hosting WSGI.
-El workflow de GitHub Actions se usa para validar tests antes de publicar cambios.
+Este proyecto está preparado para desplegarse en Render desde GitHub Actions.
 
-### Requisitos en PythonAnywhere
+### Requisitos en Render
 
-- Cuenta en PythonAnywhere.
-- Un entorno virtual con Python 3.10+.
-- El proyecto clonado en tu home de PythonAnywhere.
+- Cuenta en Render (free tier).
+- Repositorio conectado a Render.
 
-### Pasos de configuración
+### Paso 1: crear servicio web en Render
 
-1. En PythonAnywhere, abre una consola Bash y clona el repositorio:
+1. En Render, pulsa `New +` y selecciona `Blueprint`.
+2. Conecta tu repositorio y selecciona este proyecto.
+3. Render detectará `render.yaml` y creará el servicio `test-web-demo`.
 
-```bash
-git clone <TU_REPO_GIT>
-cd test-web-demo
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
+### Paso 2: configurar Deploy Hook para GitHub Actions
 
-1. Crea una nueva Web App en el panel de PythonAnywhere:
+1. Abre tu servicio en Render y entra en `Settings`.
+2. Copia la `Deploy Hook URL`.
+3. En GitHub, abre `Settings > Secrets and variables > Actions`.
+4. Crea el secret `RENDER_DEPLOY_HOOK_URL` con esa URL.
 
-- Tipo: `Manual configuration`
-- Versión de Python: 3.10+ (la que tengas disponible)
+### Paso 3: despliegue automático
 
-1. En la pestaña `Web`, configura el archivo WSGI:
+1. Haz push a `main`.
+2. GitHub Actions ejecuta tests.
+3. Si pasan, el workflow dispara el Deploy Hook y Render publica la nueva versión.
 
-- Puedes usar la plantilla de `pythonanywhere_wsgi.py` incluida en este repo.
-- Ajusta `PROJECT_HOME` a tu ruta real, por ejemplo:
-  - `/home/tu_usuario/test-web-demo`
+### Nota importante sobre SQLite en Render free
 
-1. Configura el entorno virtual en la pestaña `Web`:
-
-- Ruta ejemplo: `/home/tu_usuario/test-web-demo/.venv`
-
-1. Recarga la app desde el botón `Reload` y prueba:
-
-- `https://tu_usuario.pythonanywhere.com/login`
-- `https://tu_usuario.pythonanywhere.com/register`
-
-### SQLite en PythonAnywhere
-
-- SQLite se guarda de forma persistente en tu home.
-- La variable `APP_DB_PATH` puede apuntar a:
-  - `/home/tu_usuario/test-web-demo/users.db`
-- Si no defines `APP_DB_PATH`, por defecto se usa `users.db` en la raíz del proyecto.
-
-### Flujo recomendado con GitHub Actions
-
-1. Haz push a GitHub.
-2. GitHub Actions ejecuta tests automáticamente.
-3. Si todo pasa, en PythonAnywhere haces `git pull` y `Reload`.
+- En Render free, la base se guardará en `/tmp/users.db`.
+- Ese almacenamiento es efímero y puede perderse entre reinicios o deploys.
+- Para esta demo educativa es válido, pero no para producción.
 
 ## Estructura
 
@@ -148,7 +126,7 @@ pip install -r requirements.txt
 - `.github/workflows/python-ci.yml`: pipeline para GitHub Actions.
 - `Dockerfile`: imagen para ejecutar la app en contenedor local.
 - `docker-compose.yml`: orquestación local del contenedor web y servicio opcional de tests.
-- `pythonanywhere_wsgi.py`: plantilla WSGI para desplegar en PythonAnywhere.
+- `render.yaml`: configuración de despliegue en Render free.
 
 ## Convención de textos (español)
 
